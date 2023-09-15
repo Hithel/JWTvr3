@@ -1,3 +1,4 @@
+using System.Reflection;
 using ApiJwt.Extension;
 using ApiJwt.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ builder.Logging.AddSerilog(logger);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -45,6 +47,7 @@ using (var scope = app.Services.CreateScope())
 	{
 		var context = services.GetRequiredService<JwtAppContext>();
 		await context.Database.MigrateAsync();
+		await JwtAppContextSeed.SeedAsync(context,loggerFactory);
 	}
 	catch (Exception ex)
 	{

@@ -7,6 +7,9 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private readonly JwtAppContext _context;
     private IRolRepository _roles;
     private IUserRepository _users;
+    private IProducto _producto;
+    private IMarca _marca;
+    private ICategoria _categoria;
     public UnitOfWork(JwtAppContext context)
     {
         _context = context;
@@ -35,6 +38,41 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         }
     }
 
+    public IProducto Productos
+    {
+        get
+        {
+            if (_producto == null)
+            {
+                _producto = new ProductoRepository(_context);
+            }
+            return _producto;
+        }
+    }
+
+    public IMarca Marcas
+    {
+        get
+        {
+            if (_marca == null)
+            {
+                _marca = new MarcaRepository(_context);
+            }
+            return _marca;
+        }
+    }
+
+    public ICategoria Categorias
+    {
+        get
+        {
+            if (_categoria == null)
+            {
+                _categoria = new CategoriaRepository(_context);
+            }
+            return _categoria;
+        }
+    }
     public async Task<int> SaveAsync()
     {
         return await _context.SaveChangesAsync();
